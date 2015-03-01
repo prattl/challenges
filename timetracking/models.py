@@ -1,4 +1,5 @@
 from django.db import models
+from django.core import serializers
 from timetracking.invoice import Invoice
 import uuid
 
@@ -24,7 +25,7 @@ class TimeEntry(models.Model):
 
 
 class Job(models.Model):
-    uuid = models.CharField(max_length=64, unique=True, default=uuid.uuid1)
+    uuid = models.CharField(max_length=64, unique=True, default=uuid.uuid1, editable=False)
     title = models.CharField(max_length=120)
     hourly_rate = models.DecimalField(max_digits=7, decimal_places=2)
     tax_rate = models.DecimalField(max_digits=6, decimal_places=4)

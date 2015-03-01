@@ -1,0 +1,7 @@
+{% extends 'timetracking/base.html' %}
+
+{% block base_content %}
+<h1>Home</h1>
+<p>Check out some <a href="{% url 'jobs' %}">jobs</a></p>
+<p>Check out some <a href="{% url 'time_entries' %}">time entries</a></p>
+{% endblock %}

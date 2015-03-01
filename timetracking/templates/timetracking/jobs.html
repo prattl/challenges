@@ -1,0 +1,32 @@
+{% extends 'timetracking/base.html' %}
+{% load staticfiles %}
+
+
+{% block base_content %}
+
+<h1>Jobs</h1>
+
+<div class="jobs">
+    <table class="u-full-width">
+        <thead>
+            <tr>
+                <th>UUID</th>
+                <th>Title</th>
+                <th>Hourly Rate</th>
+                <th>Tax Rate</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for job in jobs %}
+            <tr>
+                <td>job.uuid</td>
+                <td>job.title</td>
+                <td>job.hourly_rate</td>
+                <td>job.tax_rate</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock base_content %}

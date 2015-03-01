@@ -11,3 +11,14 @@ class Invoice():
         self.subtotal = 0
         self.tax = 0
         self.total = 0
+        self.calculate_totals()
+
+
+    def calculate_totals(self):
+        hourly_rate = self.job.hourly_rate
+        tax_rate = self.job.tax_rate
+        total_minutes = sum([time_entry.time_spent for time_entry in self.time_entries])
+
+        self.subtotal = hourly_rate * total_minutes / 60
+        self.tax = self.subtotal * tax_rate
+        self.total = self.subtotal - self.tax
