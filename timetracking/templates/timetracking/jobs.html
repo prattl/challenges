@@ -10,6 +10,7 @@
     <table class="u-full-width">
         <thead>
             <tr>
+                <th>ID</th>
                 <th>UUID</th>
                 <th>Title</th>
                 <th>Hourly Rate</th>
@@ -19,10 +20,11 @@
         <tbody>
             {% for job in jobs %}
             <tr>
-                <td>job.uuid</td>
-                <td>job.title</td>
-                <td>job.hourly_rate</td>
-                <td>job.tax_rate</td>
+                <td>{{ job.id }}</td>
+                <td>{{ job.uuid }}</td>
+                <td>{{ job.title }}</td>
+                <td>{{ job.hourly_rate|floatformat:2 }}</td>
+                <td>{{ job.tax_rate|floatformat:3 }}</td>
             </tr>
             {% endfor %}
         </tbody>
