@@ -59,13 +59,6 @@ $(function() {
             success: function(result) {
                 $status.text("Success.");
                 console.log(result);
-
-                // De-serialize the JSON data and add it to the table
-                var new_entry = $.parseJSON(result);
-                var $tbody = $("tbody");
-                var new_row = "<tr><td><a href=\"/timetracking/time-entries/" + new_entry.pk + "\">" + new_entry.pk + "</a></td><td>" + new_entry.fields.uuid + "</td><td>" + new_entry.fields.title + "</td><td>" + new_entry.fields.hourly_rate + "</td><td>" + new_entry.fields.tax_rate + "</td></tr>";
-                // TODO: Make sure data is HTML-escaped before appending
-                $tbody.append(new_row);
             },
 
             error: function(result) {

@@ -22,7 +22,7 @@ class TimeEntry(models.Model):
 
 
     def __unicode__(self):
-        return u"Time entry for {} on {}".format(self.job, self.entry_date)
+        return u"Time entry for {} on {}, {} minutes".format(self.job, self.entry_date, self.time_spent)
 
 
     def __repr__(self):
@@ -39,8 +39,6 @@ class Job(models.Model):
     def invoice(self, start_date, end_date):
         # Find time entries within the date range
         time_entries = TimeEntry.objects.filter(entry_date__range=(start_date, end_date))
-        print 'Found these time entries: '
-        print time_entries
 
         # Create an Invoice object
         new_invoice = Invoice(job=self, start_date=start_date, end_date=end_date, time_entries=time_entries)

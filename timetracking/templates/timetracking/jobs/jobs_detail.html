@@ -8,50 +8,91 @@
 <h1>Job: {{ object }}</h1>
 
 <div class="row">
-    <div class="six columns">
-        <form id="job_update_form" action="" method="post">{% csrf_token %}
-            <h2>Update this Job</h2>
-            {{ form.as_p }}
-            <input type="submit" value="Update" class="button" />
-        </form>
+    <form id="job_update_form" action="" method="post">{% csrf_token %}
+        <h2>Update this Job</h2>
+        {{ form.as_p }}
+        <input type="submit" value="Update" class="button" />
+    </form>
 
-        <p class="status">
-        </p>
-    </div>
-    <div class="six columns">
-        <form id="get_invoice_form" action="" method="post">{% csrf_token %}
-            <h2>Create an Invoice</h2>
-            <input type="date" name="start_date" />
-            <input type="date" name="end_date" />
-            <input type="submit" value="Generate Invoice" class="button" />
-        </form>
-    </div>
+    <p id="update_status">
+    </p>
+</div>
+<div class="row">
+    <form id="invoice_form" action="{% url 'timetracking:invoice' pk=object.pk %}" method="post">{% csrf_token %}
+        <h2>Create an Invoice</h2>
+        <input type="date" name="start_date" />
+        <input type="date" name="end_date" />
+        <input type="submit" value="Generate Invoice" class="button" />
+    </form>
+
+    <p id="invoice_status">
+    </p>
+
+    <div class="invoice_result"></div>
 </div>
 
 <script type="text/javascript">
 $(document).ready(function() {
-    $form = $("#job_update_form");
-    $status = $(".status");
+    $update_form = $("#job_update_form");
+    $invoice_form = $("#invoice_form");
+    $update_status = $("#update_status");
+    $invoice_status = $("#invoice_status");
 
     // Submit the form via AJAX to the current URL
-    $form.submit(function(e) {
+    $update_form.submit(function(e) {
         e.preventDefault();
-        $status.text("");
+        $update_status.text("");
         $.ajax({
-            url: "",
-            type: "post",
-            data: $form.serializeArray(),
+            url: $update_form.attr("action"),
+            type: $update_form.attr("method"),
+            data: $update_form.serializeArray(),
 
             success: function(result) {
-                $status.text("Success.");
+                $update_status.text("Success.");
                 console.log(result);
             },
 
             error: function(result) {
-                $status.text("Error: " + result.responseText);
+                $update_status.text("Error: " + result.responseText);
                 console.log(result);
             }
         });
+    });
+
+    $invoice_form.submit(function(e) {
+        e.preventDefault();
+        $invoice_status.text("");
+
+        $.ajax({
+            url: $invoice_form.attr("action"),
+            type: $invoice_form.attr("method"),
+            data: $invoice_form.serializeArray(),
+
+            success: function(result) {
+                $invoice_status.text("Your invoice is below.");
+                console.log(result);
+
+                var return_html = "<ul><li>Job: " + result.job + "</li>";
+                return_html += "<li>" + result.start_date + " - " + result.end_date + "</li>";
+                return_html += "<li>Time Entries:</li><ul>";
+                for (var i=0; i< result.time_entries.length; i++) {
+                    return_html += "<li>" + result.time_entries[i] + "</li>";
+                }
+                return_html += "</ul>";
+                return_html += "<li>Subtotal: " + result.subtotal + "</li>";
+                return_html += "<li>Tax: " + result.tax + "</li>";
+                return_html += "<li>Total: " + result.total + "</li>";
+
+                $(".invoice_result").html(return_html);
+
+            },
+
+            error: function(result) {
+                $invoice_status.text("Error: " + result.responseText);
+                console.log(result);
+            }
+        });
+
     });
 });
 </script>

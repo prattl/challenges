@@ -8,6 +8,8 @@ from django.views.generic.edit import FormView, CreateView, UpdateView, DeleteVi
 
 from timetracking.models import Job, TimeEntry
 
+import datetime
+
 
 class HomeView(TemplateView):
     template_name = 'timetracking/index.html'
@@ -91,3 +93,33 @@ class TimeEntriesDeleteView(AjaxableResponseMixin, DeleteView):
     template_name = 'timetracking/time_entries/time_entries_delete.html'
     model = TimeEntry
     success_url = reverse_lazy('timetracking:time_entries')
+
+
+class InvoiceView(AjaxableResponseMixin, View):
+    def post(self, request, *args, **kwargs):
+        if request.is_ajax():
+            # Retrieve the job we are looking at
+            job_pk = kwargs.pop('pk')
+            try:
+                job = Job.objects.get(pk=job_pk)
+            except Job.DoesNotExist as e:
+                return JsonResponse({'errors': 'Job does not exist'}, status=400)
+
+            # Validate the date ranges
+            # TODO: This should all be done in a Django Form
+            start_date = request.POST.get('start_date')
+            end_date = request.POST.get('end_date')
+            try:
+                date1 = datetime.datetime.strptime(start_date, '%Y-%m-%d').date()
+                date2 = datetime.datetime.strptime(end_date, '%Y-%m-%d').date()
+            except Exception as e:
+                return JsonResponse({'errors': 'Date is not correct format'}, status=400)
+
+            # Generate and send back the invoice
+            invoice = job.invoice(date1, date2)
+            return JsonResponse(invoice.to_json())
+
+        else:
+            return JsonResponse({'errors': 'Request is not ajax.'}, status=400)
+
+

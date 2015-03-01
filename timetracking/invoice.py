@@ -22,3 +22,17 @@ class Invoice():
         self.subtotal = hourly_rate * total_minutes / 60
         self.tax = self.subtotal * tax_rate
         self.total = self.subtotal - self.tax
+
+
+    def to_json(self):
+        # Return a dict of JSON-serializable data
+        return {
+                'job': unicode(self.job),
+                'start_date': unicode(self.start_date),
+                'end_date': unicode(self.end_date),
+                'time_entries': [unicode(entry) for entry in self.time_entries],
+                'subtotal': self.subtotal,
+                'tax': self.tax,
+                'total': self.total,
+        }
+
