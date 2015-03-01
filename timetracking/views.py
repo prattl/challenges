@@ -1,4 +1,5 @@
 from django.core import serializers
+from django.core.urlresolvers import reverse_lazy
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.views.generic import TemplateView
@@ -47,6 +48,9 @@ class AjaxableResponseMixin(object):
 class JobsView(AjaxableResponseMixin, CreateView):
     # Implement the Jobs view as a CreateView so we can create new records easily 
     # on the main Jobs page.
+    # Improvements:
+    # Render the page without the jobs and load those via ajax
+
     template_name = 'timetracking/jobs/jobs.html'
     model = Job
 
@@ -76,6 +80,16 @@ class JobsDetailView(AjaxableResponseMixin, UpdateView):
 
     def dispatch(self, request, *args, **kwargs):
         return super(JobsDetailView, self).dispatch(request, *args, **kwargs)
+
+
+class JobsDeleteView(AjaxableResponseMixin, DeleteView):
+    template_name = 'timetracking/jobs/jobs_delete.html'
+    model = Job
+    success_url = reverse_lazy('timetracking:jobs')
+
+
+    def dispatch(self, request, *args, **kwargs):
+        return super(JobsDeleteView, self).dispatch(request, *args, **kwargs)
 
 
 class TimeEntriesView(View):

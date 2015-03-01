@@ -15,6 +15,7 @@
                 <th>Title</th>
                 <th>Hourly Rate</th>
                 <th>Tax Rate</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -25,6 +26,7 @@
                 <td>{{ job.title }}</td>
                 <td>{{ job.hourly_rate|floatformat:2 }}</td>
                 <td>{{ job.tax_rate|floatformat:3 }}</td>
+                <td><a href="{% url 'timetracking:jobs_delete' pk=job.pk %}" class="button">Delete</a></td>
             </tr>
             {% endfor %}
         </tbody>
@@ -60,7 +62,10 @@ $(function() {
 
                 // De-serialize the JSON data and add it to the table
                 var new_entry = $.parseJSON(result);
-                console.log('New Entry: ' + new_entry);
+                var $tbody = $("tbody");
+                var new_row = "<tr><td><a href=\"/timetracking/jobs/" + new_entry.pk + "\">" + new_entry.pk + "</a></td><td>" + new_entry.fields.uuid + "</td><td>" + new_entry.fields.title + "</td><td>" + new_entry.fields.hourly_rate + "</td><td>" + new_entry.fields.tax_rate + "</td></tr>";
+                // TODO: Make sure data is HTML-escaped before appending
+                $tbody.append(new_row);
             },
 
             error: function(result) {
