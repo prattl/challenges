@@ -1,0 +1,77 @@
+{% extends 'timetracking/base.html' %}
+{% load staticfiles %}
+
+
+{% block base_content %}
+
+<h1>Jobs</h1>
+
+<div class="jobs">
+    <table class="u-full-width">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>UUID</th>
+                <th>Title</th>
+                <th>Hourly Rate</th>
+                <th>Tax Rate</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for job in jobs %}
+            <tr>
+                <td><a href="{% url 'timetracking:jobs_details' pk=job.pk %}">{{ job.id }}</a></td>
+                <td>{{ job.uuid }}</td>
+                <td>{{ job.title }}</td>
+                <td>{{ job.hourly_rate|floatformat:2 }}</td>
+                <td>{{ job.tax_rate|floatformat:3 }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <form id="new_record_form" action="" method="post">{% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Submit New Record" class="button" />
+    </form>
+
+    <p class="status">
+    </p>
+
+</div>
+
+
+<script type="text/javascript">
+$(function() {
+    $form = $("#new_record_form");
+    $status = $(".status");
+
+    $form.submit(function(e) {
+        e.preventDefault();
+        $status.text("");
+        $.ajax({
+            url: "",
+            type: "post",
+            data: $form.serializeArray(),
+
+            success: function(result) {
+                $status.text("Success.");
+                console.log(result);
+
+                // De-serialize the JSON data and add it to the table
+                var new_entry = $.parseJSON(result);
+                console.log('New Entry: ' + new_entry);
+            },
+
+            error: function(result) {
+                $status.text("Error: " + result.responseText);
+                console.log(result);
+            }
+        });
+    });
+
+});
+
+</script>
+
+{% endblock base_content %}

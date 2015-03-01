@@ -1,5 +1,6 @@
 from django.db import models
 from django.core import serializers
+from django.core.urlresolvers import reverse
 from timetracking.invoice import Invoice
 import uuid
 
@@ -40,6 +41,10 @@ class Job(models.Model):
         # Create an Invoice object
         new_invoice = Invoice(job=self, start_date=start_date, end_date=end_date, time_entries=time_entries)
         return new_invoice
+
+
+    def get_absolute_url(self):
+        return reverse('timetracking:jobs_details', kwargs={'pk': self.pk})
 
 
     def __unicode__(self):
