@@ -12,6 +12,10 @@ class TimeEntry(models.Model):
     job = models.ForeignKey('Job', to_field='uuid')
 
 
+    def get_absolute_url(self):
+        return reverse('timetracking:time_entries_details', kwargs={'pk': self.pk})
+
+
     class Meta:
         verbose_name = 'Time Entry'
         verbose_name_plural = 'Time Entries'

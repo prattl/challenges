@@ -5,15 +5,28 @@
 
 <p><a href="{% url "timetracking:jobs" %}">Jobs</a></p>
 
-<h1>Job: {{ job }}</h1>
+<h1>Job: {{ object }}</h1>
 
-<form id="job_update_form" action="" method="post">{% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" value="Update" class="button" />
-</form>
+<div class="row">
+    <div class="six columns">
+        <form id="job_update_form" action="" method="post">{% csrf_token %}
+            <h2>Update this Job</h2>
+            {{ form.as_p }}
+            <input type="submit" value="Update" class="button" />
+        </form>
 
-<p class="status">
-</p>
+        <p class="status">
+        </p>
+    </div>
+    <div class="six columns">
+        <form id="get_invoice_form" action="" method="post">{% csrf_token %}
+            <h2>Create an Invoice</h2>
+            <input type="date" name="start_date" />
+            <input type="date" name="end_date" />
+            <input type="submit" value="Generate Invoice" class="button" />
+        </form>
+    </div>
+</div>
 
 <script type="text/javascript">
 $(document).ready(function() {

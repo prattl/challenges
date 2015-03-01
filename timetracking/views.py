@@ -61,25 +61,9 @@ class JobsView(AjaxableResponseMixin, CreateView):
         return context
 
 
-    def dispatch(self, request, *args, **kwargs):
-        self.tvars = {}
-        return super(JobsView, self).dispatch(request, *args, **kwargs)
-
-
-    # def get(self, request, *args, **kwargs):
-        # Render this template with a list of all jobs
-        # jobs = Job.objects.all()
-        # self.tvars['jobs'] = jobs
-        # return render(request, self.template_name, self.tvars)
-
-
 class JobsDetailView(AjaxableResponseMixin, UpdateView):
     template_name = 'timetracking/jobs/jobs_detail.html'
     model = Job
-
-
-    def dispatch(self, request, *args, **kwargs):
-        return super(JobsDetailView, self).dispatch(request, *args, **kwargs)
 
 
 class JobsDeleteView(AjaxableResponseMixin, DeleteView):
@@ -88,18 +72,22 @@ class JobsDeleteView(AjaxableResponseMixin, DeleteView):
     success_url = reverse_lazy('timetracking:jobs')
 
 
-    def dispatch(self, request, *args, **kwargs):
-        return super(JobsDeleteView, self).dispatch(request, *args, **kwargs)
+class TimeEntriesView(AjaxableResponseMixin, CreateView):
+    template_name = 'timetracking/time_entries/time_entries.html'
+    model = TimeEntry
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(TimeEntriesView, self).get_context_data(**kwargs)
+        context['time_entries'] = TimeEntry.objects.all()
+        return context
 
 
-class TimeEntriesView(View):
-    template = 'timetracking/timeentries.html'
+class TimeEntriesDetailView(AjaxableResponseMixin, UpdateView):
+    template_name = 'timetracking/time_entries/time_entries_detail.html'
+    model = TimeEntry
 
 
-    def dispatch(self, request, *args, **kwargs):
-        self.tvars = {}
-        return super(TimeEntriesView, self).dispatch(request, *args, **kwargs)
-
-
-    def get(self, request, *args, **kwargs):
-        return render(request, self.template, self.tvars)
+class TimeEntriesDeleteView(AjaxableResponseMixin, DeleteView):
+    template_name = 'timetracking/time_entries/time_entries_delete.html'
+    model = TimeEntry
+    success_url = reverse_lazy('timetracking:time_entries')

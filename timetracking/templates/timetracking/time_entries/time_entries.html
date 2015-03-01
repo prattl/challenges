@@ -1,0 +1,82 @@
+{% extends 'timetracking/base.html' %}
+{% load staticfiles %}
+
+
+{% block base_content %}
+
+<h1>Time Entries</h1>
+
+<div class="time-entries">
+    <table class="u-full-width">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Time Spent (minutes)</th>
+                <th>Entry Date</th>
+                <th>Summary</th>
+                <th>Job</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for entry in time_entries %}
+            <tr>
+                <td><a href="{% url 'timetracking:time_entries_details' pk=entry.pk %}">{{ entry.id }}</a></td>
+                <td>{{ entry.time_spent }}</td>
+                <td>{{ entry.entry_date }}</td>
+                <td>{{ entry.summary|truncatechars:50 }}</td>
+                <td><a href="{% url 'timetracking:jobs_details' pk=entry.job.pk %}">{{ entry.job.uuid }}</a></td>
+                <td><a href="{% url 'timetracking:time_entries_delete' pk=entry.pk %}" class="button">Delete</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <form id="new_record_form" action="" method="post">{% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Submit New Record" class="button" />
+    </form>
+
+    <p class="status">
+    </p>
+
+</div>
+
+
+<script type="text/javascript">
+$(function() {
+    $form = $("#new_record_form");
+    $status = $(".status");
+
+    $form.submit(function(e) {
+        e.preventDefault();
+        $status.text("");
+        $.ajax({
+            url: "",
+            type: "post",
+            data: $form.serializeArray(),
+
+            success: function(result) {
+                $status.text("Success.");
+                console.log(result);
+
+                // De-serialize the JSON data and add it to the table
+                var new_entry = $.parseJSON(result);
+                var $tbody = $("tbody");
+                var new_row = "<tr><td><a href=\"/timetracking/time-entries/" + new_entry.pk + "\">" + new_entry.pk + "</a></td><td>" + new_entry.fields.uuid + "</td><td>" + new_entry.fields.title + "</td><td>" + new_entry.fields.hourly_rate + "</td><td>" + new_entry.fields.tax_rate + "</td></tr>";
+                // TODO: Make sure data is HTML-escaped before appending
+                $tbody.append(new_row);
+            },
+
+            error: function(result) {
+                $status.text("Error: " + result.responseText);
+                console.log(result);
+            }
+        });
+    });
+
+});
+
+</script>
+
+{% endblock base_content %}
