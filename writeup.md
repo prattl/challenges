@@ -3,7 +3,7 @@
 ## Differences from Production
 
 * Sensitive data should be pulled out of the settings.py file
-* * Secret keys, databse login information, etc. should be obfuscated
+  * Secret keys, databse login information, etc. should be obfuscated
 * Static files should be served through the web server, not Django, for performance reasons
 * URLs should not include database keys, for security reasons
 * When updating / creating records via Ajax, HTML characters should be escaped to prevent XSS attacks
