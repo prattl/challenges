@@ -103,17 +103,24 @@ class InvoiceView(AjaxableResponseMixin, View):
             try:
                 job = Job.objects.get(pk=job_pk)
             except Job.DoesNotExist as e:
-                return JsonResponse({'errors': 'Job does not exist'}, status=400)
+                return JsonResponse({'errors': str(e)}, status=400)
 
             # Validate the date ranges
             # TODO: This should all be done in a Django Form
             start_date = request.POST.get('start_date')
             end_date = request.POST.get('end_date')
+            date_errors = None
             try:
                 date1 = datetime.datetime.strptime(start_date, '%Y-%m-%d').date()
                 date2 = datetime.datetime.strptime(end_date, '%Y-%m-%d').date()
             except Exception as e:
-                return JsonResponse({'errors': 'Date is not correct format'}, status=400)
+                date_errors = {'errors': 'Date is not correct format'}
+
+            if date1 > date2:
+                date_errors = {'errors': 'Date 1 must be less than date 2'}
+
+            if date_errors:
+                return JsonResponse(date_errors, status=400)
 
             # Generate and send back the invoice
             invoice = job.invoice(date1, date2)
