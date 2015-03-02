@@ -34,3 +34,5 @@ Create a new virtual environment with python2.7 and activate it
 Install requirements.txt with pip
 
 Run migrations > `python manage.py migrate`
+
+Note: Database is sqlite3 for easy setup and portability
