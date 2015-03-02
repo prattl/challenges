@@ -33,7 +33,7 @@ class Job(models.Model):
     uuid = models.CharField(max_length=64, unique=True, default=uuid.uuid1, editable=False)
     title = models.CharField(max_length=120)
     hourly_rate = models.DecimalField(max_digits=7, decimal_places=2)
-    tax_rate = models.DecimalField(max_digits=6, decimal_places=4)
+    tax_rate = models.DecimalField(max_digits=6, decimal_places=4, help_text="Unit is %")
 
 
     def invoice(self, start_date, end_date):

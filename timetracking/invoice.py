@@ -2,6 +2,14 @@ import datetime
 
 
 class Invoice():
+    """
+    This class just defines some variables relavant to an invoice. It also
+    calculates the totals based on the hob and time entries. To improve the
+    class, we should make it JSON-serializable (as opposed to just returning a
+    dict of strings in the to_json() method). We should also verify that we
+    have a valid job and time entries assigned with some exception handling,
+    in the even that there is some data missing.
+    """
     def __init__(self, job, start_date, end_date, time_entries):
         # Initialize some params and default values
         self.job = job
@@ -16,12 +24,12 @@ class Invoice():
 
     def calculate_totals(self):
         hourly_rate = self.job.hourly_rate
-        tax_rate = self.job.tax_rate
+        tax_rate = self.job.tax_rate / 100
         total_minutes = sum([time_entry.time_spent for time_entry in self.time_entries])
 
         self.subtotal = hourly_rate * total_minutes / 60
         self.tax = self.subtotal * tax_rate
-        self.total = self.subtotal - self.tax
+        self.total = self.subtotal + self.tax
 
 
     def to_json(self):

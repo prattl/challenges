@@ -48,16 +48,24 @@ class AjaxableResponseMixin(object):
 
 
 class JobsView(AjaxableResponseMixin, CreateView):
-    # Implement the Jobs view as a CreateView so we can create new records easily 
-    # on the main Jobs page.
-    # Improvements:
-    # Render the page without the jobs and load those via ajax
+    """
+    Implement the Jobs view as a CreateView so we can create new records easily 
+    on the main Jobs page. Also for all of these views, we are using the
+    object's pk as an identifier because that is just the default behavior.
+    We could override this with the get_object() method, and use an alternative
+    identifier (like a slug or uuid) instead.
+
+    Improvements:
+    Render the page initially without the jobs and load those via ajax
+    """
 
     template_name = 'timetracking/jobs/jobs.html'
     model = Job
 
 
     def get_context_data(self, *args, **kwargs):
+        # We want to display a list of all jobs on this page, so add them to
+        # the context.
         context = super(JobsView, self).get_context_data(**kwargs)
         context['jobs'] = Job.objects.all()
         return context
@@ -79,6 +87,8 @@ class TimeEntriesView(AjaxableResponseMixin, CreateView):
     model = TimeEntry
 
     def get_context_data(self, *args, **kwargs):
+        # We want to display a list of all time entries on this page, so add them to
+        # the context.
         context = super(TimeEntriesView, self).get_context_data(**kwargs)
         context['time_entries'] = TimeEntry.objects.all()
         return context
@@ -95,7 +105,7 @@ class TimeEntriesDeleteView(AjaxableResponseMixin, DeleteView):
     success_url = reverse_lazy('timetracking:time_entries')
 
 
-class InvoiceView(AjaxableResponseMixin, View):
+class InvoiceView(View):
     def post(self, request, *args, **kwargs):
         if request.is_ajax():
             # Retrieve the job we are looking at
