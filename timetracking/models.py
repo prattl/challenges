@@ -55,3 +55,5 @@ class Job(models.Model):
 
     def __repr__(self):
         return '<Job: {} - {}>'.format(self.title, self.uuid)
+
+
