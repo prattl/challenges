@@ -25,3 +25,12 @@ Dynamic creation of "Invoice" parameterized on job and date range returning the 
 * $ total
 
 Front-end must allow for interaction via JSON dictionaries
+
+
+## Installation
+
+Create a new virtual environment with python2.7 and activate it
+
+Install requirements.txt with pip
+
+Run migrations > `python manage.py migrate`
