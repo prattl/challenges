@@ -1,4 +1,3 @@
 *.sqlite3
-manage.py
 *.swp
 *.pyc
