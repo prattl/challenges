@@ -26,6 +26,8 @@ class Invoice():
 
     def to_json(self):
         # Return a dict of JSON-serializable data
+        # TODO: Make this object itself serializable
+        # This would require making the TimeEntry and Job classes serializable as well.
         return {
                 'job': unicode(self.job),
                 'start_date': unicode(self.start_date),
